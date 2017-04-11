@@ -49,7 +49,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void save() {
 		if (etName.getText().toString().trim().equals("")
 				|| etAge.getText().toString().trim().equalsIgnoreCase("")) {
-			Toast.makeText(MainActivity.this, "年龄和姓名不能为空", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "年龄和姓名不能为空", Toast.LENGTH_SHORT)
+					.show();
 		} else {
 			mSub = new Subscriber();
 			mSub.setName(etName.getText().toString().trim());
@@ -59,26 +60,45 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void query() {
-		
-		// 条件查询
+		// 查询全部
 		if (etAge.getText().toString().trim().equals("")
-				|| etName.getText().toString().trim().equals("")) {
+				&& etName.getText().toString().trim().equals("")) {
 			List<Subscriber> list1 = new Select().from(Subscriber.class)
 					.execute();
 			ergodic(list1, "list1");
-		} else {
+
+			// 根据年龄查询
+		} else if (etAge.getText().toString().trim() != ""
+				&& etName.getText().toString().trim().equals("")) {
 			List<Subscriber> list2 = new Select().from(Subscriber.class)
 					.where("age=?", 12).execute();
 			ergodic(list2, "list2");
+			Toast.makeText(MainActivity.this, "根据年龄查询", Toast.LENGTH_SHORT)
+					.show();
+			// 根据姓名查询
+		} else if (etAge.getText().toString().trim().equals("")
+				&& etName.getText().toString().trim() != "") {
+			List<Subscriber> list12 = new Select().from(Subscriber.class)
+					.where("name=?", etName.getText().toString().trim())
+					.execute();
+			ergodic(list12, "list12");
+			// 根据年龄，姓名查询
+		} else if (etAge.getText().toString().trim() != ""
+				&& etName.getText().toString().trim() != "") {
+			List<Subscriber> list2 = new Select()
+					.from(Subscriber.class)
+					.where("age=? and name=?",
+							Integer.parseInt(etAge.getText().toString().trim()),
+							etName.getText().toString().trim()).execute();
+			ergodic(list2, "list2");
 		}
-
 	}
 
 	private void replace() {
 		List<Subscriber> list3 = new Select().from(Subscriber.class)
 				.where("age=?", 12).execute();
 		for (int i = 0; i < list3.size(); i++) {
-			if (etAge.getText().toString().trim() .equals("")) {
+			if (etAge.getText().toString().trim().equals("")) {
 				list3.get(i).setAge(100);
 				list3.get(i).save();
 			} else {
