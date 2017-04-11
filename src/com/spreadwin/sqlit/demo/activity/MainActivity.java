@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
-import com.example.demo.R;
 import com.spreadwin.sqlit.demo.bean.Subscriber;
+import com.spreadwin.sqlit.R;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -71,7 +71,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		} else if (etAge.getText().toString().trim() != ""
 				&& etName.getText().toString().trim().equals("")) {
 			List<Subscriber> list2 = new Select().from(Subscriber.class)
-					.where("age=?", 12).execute();
+					.where("age=?", Integer.parseInt(etAge.getText().toString().trim())).execute();
 			ergodic(list2, "list2");
 			Toast.makeText(MainActivity.this, "根据年龄查询", Toast.LENGTH_SHORT)
 					.show();
@@ -117,7 +117,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			System.out.println(str + "_" + i + ":" + list.get(i).toString());
 			sb.append(list.get(i).toString());
 		}
-		tvString.setText(sb.toString());
+		if(sb.toString().equals("")){
+			tvString.setText("没有数据");
+		}else{
+			tvString.setText(sb.toString());
+		}
 		sb = null;
 	}
 
